@@ -32,12 +32,12 @@ protected:
 RobotFootprintPublisher::RobotFootprintPublisher():private_nh_("~")
 {
     // param
-    private_nh_.param("hz", hz_, 5);
-    private_nh_.param("robot_frame", robot_frame_, {"base_link"});
-    private_nh_.param("front_side_distance", front_side_distance_, 0.5);
-    private_nh_.param("rear_side_distance", rear_side_distance_, 0.5);
-    private_nh_.param("right_side_distance", right_side_distance_, 0.5);
-    private_nh_.param("left_side_distance", left_side_distance_, 0.5);
+    private_nh_.param<int>("hz", hz_, 5);
+    private_nh_.param<std::string>("robot_frame", robot_frame_, {"base_link"});
+    private_nh_.param<double>("front_side_distance", front_side_distance_, 0.5);
+    private_nh_.param<double>("rear_side_distance", rear_side_distance_, 0.5);
+    private_nh_.param<double>("right_side_distance", right_side_distance_, 0.5);
+    private_nh_.param<double>("left_side_distance", left_side_distance_, 0.5);
 
     // publisher
     footprint_pub_ = nh_.advertise<geometry_msgs::PolygonStamped>("robot_footprint", 1);

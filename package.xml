@@ -53,6 +53,7 @@
   <depend>nav_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>std_msgs</depend>
+  <depend>tf</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

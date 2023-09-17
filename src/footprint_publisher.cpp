@@ -2,15 +2,15 @@
 #include <geometry_msgs/PolygonStamped.h>
 
 
-class RobotFootprintPublisher
+class FootprintPublisher
 {
 public:
-    RobotFootprintPublisher(void);
+    FootprintPublisher(void);
     void process();
 
 protected:
     void set_corners_of_rectangle();
-    void visualize_footprint();
+    void publish_footprint();
 
     int hz_;
     std::string robot_frame_;
@@ -18,7 +18,7 @@ protected:
     ros::NodeHandle nh_;
     ros::NodeHandle private_nh_;
     ros::Publisher  footprint_pub_;
-    geometry_msgs::PolygonStamped robot_footprint_;
+    geometry_msgs::PolygonStamped footprint_;
 
     // each side length from origin of robot_frame
     // (for Rectangular Robot)
@@ -29,10 +29,10 @@ protected:
 };
 
 
-RobotFootprintPublisher::RobotFootprintPublisher():private_nh_("~")
+FootprintPublisher::FootprintPublisher():private_nh_("~")
 {
     // param
-    private_nh_.param<int>("hz", hz_, 5);
+    private_nh_.param<int>("hz", hz_, 1);
     private_nh_.param<std::string>("robot_frame", robot_frame_, {"base_link"});
     private_nh_.param<double>("front_side_distance", front_side_distance_, 0.5);
     private_nh_.param<double>("rear_side_distance", rear_side_distance_, 0.5);
@@ -40,15 +40,15 @@ RobotFootprintPublisher::RobotFootprintPublisher():private_nh_("~")
     private_nh_.param<double>("left_side_distance", left_side_distance_, 0.5);
 
     // publisher
-    footprint_pub_ = nh_.advertise<geometry_msgs::PolygonStamped>("robot_footprint", 1);
+    footprint_pub_ = private_nh_.advertise<geometry_msgs::PolygonStamped>("/footprint", 1);
 
     // frame id
-    robot_footprint_.header.frame_id = robot_frame_;
+    footprint_.header.frame_id = robot_frame_;
 
     set_corners_of_rectangle();
 
 
-    ROS_INFO_STREAM("=== Robot Footprint Publisher ===");
+    ROS_INFO_STREAM("=== Footprint Publisher ===");
     ROS_INFO_STREAM("hz: " << hz_);
     ROS_INFO_STREAM("robot_frame: " << robot_frame_);
     ROS_INFO_STREAM("front_side_distance: " << front_side_distance_);
@@ -58,43 +58,43 @@ RobotFootprintPublisher::RobotFootprintPublisher():private_nh_("~")
 }
 
 
-void RobotFootprintPublisher::set_corners_of_rectangle()
+void FootprintPublisher::set_corners_of_rectangle()
 {
     geometry_msgs::Point32 point;
 
     // right front
     point.x =  front_side_distance_;
     point.y = -right_side_distance_;
-    robot_footprint_.polygon.points.push_back(point);
+    footprint_.polygon.points.push_back(point);
 
     // right rear
     point.x = -rear_side_distance_;
-    robot_footprint_.polygon.points.push_back(point);
+    footprint_.polygon.points.push_back(point);
 
     // left rear
     point.y = left_side_distance_;
-    robot_footprint_.polygon.points.push_back(point);
+    footprint_.polygon.points.push_back(point);
 
     // left front
     point.x = front_side_distance_;
-    robot_footprint_.polygon.points.push_back(point);
+    footprint_.polygon.points.push_back(point);
 }
 
 
-void RobotFootprintPublisher::visualize_footprint()
+void FootprintPublisher::publish_footprint()
 {
-    robot_footprint_.header.stamp = ros::Time::now();
-    footprint_pub_.publish(robot_footprint_);
+    footprint_.header.stamp = ros::Time::now();
+    footprint_pub_.publish(footprint_);
 }
 
 
-void RobotFootprintPublisher::process()
+void FootprintPublisher::process()
 {
     ros::Rate loop_rate(hz_);
 
     while(ros::ok())
     {
-        visualize_footprint();
+        publish_footprint();
         ros::spinOnce();
         loop_rate.sleep();
     }
@@ -103,9 +103,9 @@ void RobotFootprintPublisher::process()
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "robot_footprint_publisher");
-    RobotFootprintPublisher robot_footprint_publisher;
-    robot_footprint_publisher.process();
+    ros::init(argc, argv, "footprint_publisher");
+    FootprintPublisher footprint_publisher;
+    footprint_publisher.process();
 
     return 0;
 }

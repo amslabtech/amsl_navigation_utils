@@ -134,7 +134,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(odom_broadcaster src/odom_broadcaster.cpp)
 add_executable(odom_to_pose src/odom_to_pose.cpp)
-add_executable(robot_footprint_publisher src/robot_footprint_publisher.cpp)
+add_executable(footprint_publisher src/footprint_publisher.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -149,7 +149,7 @@ add_dependencies(odom_to_pose ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPOR
 ## Specify libraries to link a library or executable target against
 target_link_libraries(odom_broadcaster ${catkin_LIBRARIES})
 target_link_libraries(odom_to_pose ${catkin_LIBRARIES})
-target_link_libraries(robot_footprint_publisher ${catkin_LIBRARIES})
+target_link_libraries(footprint_publisher ${catkin_LIBRARIES})
 
 #############
 ## Install ##

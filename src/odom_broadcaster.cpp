@@ -20,7 +20,7 @@ protected:
 
 OdomBroadcaster::OdomBroadcaster()
 {
-    odom_sub_ = nh_.subscribe("/odom", 1, &OdomBroadcaster::odom_callback, this);
+    odom_sub_ = nh_.subscribe("odom", 1, &OdomBroadcaster::odom_callback, this);
     odom_broadcaster = new tf::TransformBroadcaster;
     ROS_INFO_STREAM("=== Odom Broadcaster ===");
 }

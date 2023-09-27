@@ -6,7 +6,6 @@
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <sensor_msgs/PointCloud2.h>
 #include "amsl_navigation_msgs/NodeEdgeMap.h"
-#include "ros/init.h"
 
 class InitialPosePublisher
 {

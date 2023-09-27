@@ -11,10 +11,12 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     nav_msgs
     geometry_msgs
+    sensor_msgs
     std_msgs
     tf
     pcl_conversions
     ndt_omp
+    amsl_navigation_msgs
 )
 find_package(PCL 1.8.0 REQUIRED)
 
@@ -147,6 +149,7 @@ add_executable(odom_broadcaster src/odom_broadcaster.cpp)
 add_executable(odom_to_pose src/odom_to_pose.cpp)
 add_executable(footprint_publisher src/footprint_publisher.cpp)
 add_executable(map_cloud_downsampler src/map_cloud_downsampler.cpp)
+add_executable(initialpose_publisher src/initialpose_publisher.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -164,6 +167,7 @@ target_link_libraries(odom_broadcaster ${catkin_LIBRARIES})
 target_link_libraries(odom_to_pose ${catkin_LIBRARIES})
 target_link_libraries(footprint_publisher ${catkin_LIBRARIES})
 target_link_libraries(map_cloud_downsampler ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+target_link_libraries(initialpose_publisher ${catkin_LIBRARIES})
 
 #############
 ## Install ##

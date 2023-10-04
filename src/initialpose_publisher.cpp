@@ -17,16 +17,17 @@ private:
     void map_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& msg);
     void node_edge_map_callback(const amsl_navigation_msgs::NodeEdgeMap::ConstPtr& msg);
     void checkpoint_callback(const std_msgs::Int32MultiArray::ConstPtr& msg);
-    void calc_init_pose();
+    void publish_init_pose();
+    int get_index_from_node_id(int target_id);
 
     bool map_cloud_received_;
     bool node_edge_map_received_;
     bool checkpoint_received_;
     bool init_pose_published_;
+    int hz_;
     int init_node_id_;
     int target_node_id_;
     double init_delay_time_;
-    std::vector<int> node_id_list_;
     amsl_navigation_msgs::NodeEdgeMap node_edge_map_;
 
     ros::NodeHandle nh_;
@@ -39,6 +40,7 @@ private:
 
 InitialPosePublisher::InitialPosePublisher(void) : local_nh_("~")
 {
+    local_nh_.param<int>("hz", hz_, 10);
     local_nh_.param<int>("init_node", init_node_id_, 0);
     local_nh_.param<double>("set_delay", init_delay_time_, 0.5);
 
@@ -47,6 +49,7 @@ InitialPosePublisher::InitialPosePublisher(void) : local_nh_("~")
     checkpoint_sub_ = nh_.subscribe("checkpoint", 1, &InitialPosePublisher::checkpoint_callback, this);
     init_pose_pub_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 1);
 
+    map_cloud_received_ = false;
     node_edge_map_received_ = false;
     checkpoint_received_ = false;
     init_pose_published_ = false;
@@ -54,10 +57,9 @@ InitialPosePublisher::InitialPosePublisher(void) : local_nh_("~")
 
 void InitialPosePublisher::map_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& msg)
 {
-    if (!init_pose_published_ && node_edge_map_received_ && checkpoint_received_)
+    if (!map_cloud_received_)
     {
-        ros::Duration(init_delay_time_).sleep();
-        calc_init_pose();
+        map_cloud_received_ = true;
     }
 }
 
@@ -66,13 +68,7 @@ void InitialPosePublisher::node_edge_map_callback(const amsl_navigation_msgs::No
     if (!node_edge_map_received_)
     {
         node_edge_map_ = *msg;
-        if (!node_edge_map_.nodes.empty())
-        {
-            for (const auto &node : node_edge_map_.nodes)
-                node_id_list_.push_back(node.id);
-
-            node_edge_map_received_ = true;
-        }
+        node_edge_map_received_ = true;
     }
 }
 
@@ -87,11 +83,11 @@ void InitialPosePublisher::checkpoint_callback(const std_msgs::Int32MultiArray::
     }
 }
 
-void InitialPosePublisher::calc_init_pose()
+void InitialPosePublisher::publish_init_pose()
 {
     geometry_msgs::PoseWithCovarianceStamped init_pose;
-    const int init_node_idx = find(node_id_list_.begin(), node_id_list_.end(), init_node_id_) - node_id_list_.begin();
-    const int target_node_idx = find(node_id_list_.begin(), node_id_list_.end(), target_node_id_) - node_id_list_.begin();
+    const int init_node_idx = get_index_from_node_id(init_node_id_);
+    const int target_node_idx = get_index_from_node_id(target_node_id_);
     const geometry_msgs::Point init_node_pose = node_edge_map_.nodes[init_node_idx].point;
     const geometry_msgs::Point target_node_pose = node_edge_map_.nodes[target_node_idx].point;
     const double init_direction = atan2(target_node_pose.y - init_node_pose.y, target_node_pose.x - init_node_pose.x);
@@ -106,9 +102,33 @@ void InitialPosePublisher::calc_init_pose()
     init_pose_published_ = true;
 }
 
+int InitialPosePublisher::get_index_from_node_id(int target_id)
+{
+    int index = 0;
+    for (const auto node : node_edge_map_.nodes)
+    {
+        if (node.id == target_id)
+            return index;
+
+        index++;
+    }
+    return -1;
+}
+
 void InitialPosePublisher::process()
 {
-    ros::spin();
+    ros::Rate rate(hz_);
+    while (ros::ok() && !init_pose_published_)
+    {
+        if (map_cloud_received_ && node_edge_map_received_ && checkpoint_received_)
+        {
+            ros::Duration(init_delay_time_).sleep();
+            publish_init_pose();
+            init_pose_published_ = true;
+        }
+        ros::spinOnce();
+        rate.sleep();
+    }
 }
 
 int main(int argc, char** argv)

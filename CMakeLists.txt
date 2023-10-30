@@ -126,6 +126,7 @@ include_directories(
     include
     ${catkin_INCLUDE_DIRS}
     ${PCL_INCLUDE_DIRS}
+    ${Eigen_INCLUDE_DIRS}
 )
 
 link_directories(${PCL_LIBRARY_DIRS})
@@ -150,6 +151,7 @@ add_executable(odom_to_pose src/odom_to_pose.cpp)
 add_executable(footprint_publisher src/footprint_publisher.cpp)
 add_executable(map_cloud_downsampler src/map_cloud_downsampler.cpp)
 add_executable(initialpose_publisher src/initialpose_publisher.cpp)
+add_executable(initialpose_adjuster src/initialpose_adjuster.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -168,6 +170,7 @@ target_link_libraries(odom_to_pose ${catkin_LIBRARIES})
 target_link_libraries(footprint_publisher ${catkin_LIBRARIES})
 target_link_libraries(map_cloud_downsampler ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 target_link_libraries(initialpose_publisher ${catkin_LIBRARIES})
+target_link_libraries(initialpose_adjuster ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 #############
 ## Install ##

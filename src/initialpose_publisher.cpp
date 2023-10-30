@@ -27,7 +27,6 @@ private:
     int hz_;
     int init_node_id_;
     int target_node_id_;
-    double init_delay_time_;
     amsl_navigation_msgs::NodeEdgeMap node_edge_map_;
 
     ros::NodeHandle nh_;
@@ -42,12 +41,11 @@ InitialPosePublisher::InitialPosePublisher(void) : local_nh_("~")
 {
     local_nh_.param<int>("hz", hz_, 10);
     local_nh_.param<int>("init_node", init_node_id_, 0);
-    local_nh_.param<double>("set_delay", init_delay_time_, 0.5);
 
     map_cloud_sub_ = nh_.subscribe("map_cloud", 1, &InitialPosePublisher::map_cloud_callback, this);
     node_edge_map_sub_ = nh_.subscribe("node_edge_map", 1, &InitialPosePublisher::node_edge_map_callback, this);
     checkpoint_sub_ = nh_.subscribe("checkpoint", 1, &InitialPosePublisher::checkpoint_callback, this);
-    init_pose_pub_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 1);
+    init_pose_pub_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 1, true);
 
     map_cloud_received_ = false;
     node_edge_map_received_ = false;
@@ -118,11 +116,10 @@ int InitialPosePublisher::get_index_from_node_id(int target_id)
 void InitialPosePublisher::process()
 {
     ros::Rate rate(hz_);
-    while (ros::ok() && !init_pose_published_)
+    while (ros::ok())
     {
-        if (map_cloud_received_ && node_edge_map_received_ && checkpoint_received_)
+        if (!init_pose_published_ && map_cloud_received_ && node_edge_map_received_ && checkpoint_received_)
         {
-            ros::Duration(init_delay_time_).sleep();
             publish_init_pose();
             init_pose_published_ = true;
         }

@@ -34,8 +34,8 @@ private:
 PIDController::PIDController() : private_nh_("~"), prev_error_of_angular_(0.0), i_sum_of_angular_(0.0)
 {
     private_nh_.param<double>("hz", hz_, 20.0);
-    private_nh_.param<double>("Kp_of_angular", Kp_of_angular_, 1.0);
-    private_nh_.param<double>("Ki_of_angular", Ki_of_angular_, 1.0);
+    private_nh_.param<double>("Kp_of_angular", Kp_of_angular_, 20.0);
+    private_nh_.param<double>("Ki_of_angular", Ki_of_angular_, 5.0);
     private_nh_.param<double>("Kd_of_angular", Kd_of_angular_, 1.0);
 
     dt_ = 1.0 / hz_;
@@ -59,7 +59,7 @@ void PIDController::twist_callback(const geometry_msgs::TwistConstPtr &msg) { cm
 geometry_msgs::Twist PIDController::controller()
 {
     const double error_of_angular_ = cmd_vel_.angular.z - odom_.twist.twist.angular.z;
-    i_sum_of_angular_ += error_of_angular_ * dt_;
+    i_sum_of_angular_ += (error_of_angular_ + prev_error_of_angular_) * dt_ / 2.0;
 
     const double P_of_angular_ = Kp_of_angular_ * error_of_angular_;
     const double I_of_angular_ = Ki_of_angular_ * i_sum_of_angular_;

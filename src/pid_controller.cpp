@@ -34,8 +34,8 @@ private:
 PIDController::PIDController() : private_nh_("~"), prev_error_of_angular_(0.0), i_sum_of_angular_(0.0)
 {
     private_nh_.param<double>("hz", hz_, 20.0);
-    private_nh_.param<double>("Kp_of_angular", Kp_of_angular_, 20.0);
-    private_nh_.param<double>("Ki_of_angular", Ki_of_angular_, 5.0);
+    private_nh_.param<double>("Kp_of_angular", Kp_of_angular_, 1.0);
+    private_nh_.param<double>("Ki_of_angular", Ki_of_angular_, 1.0);
     private_nh_.param<double>("Kd_of_angular", Kd_of_angular_, 1.0);
 
     dt_ = 1.0 / hz_;

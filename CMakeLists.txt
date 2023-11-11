@@ -152,8 +152,8 @@ add_executable(footprint_publisher src/footprint_publisher.cpp)
 add_executable(map_cloud_downsampler src/map_cloud_downsampler.cpp)
 add_executable(initialpose_publisher src/initialpose_publisher.cpp)
 add_executable(initialpose_adjuster src/initialpose_adjuster.cpp)
-add_executable(pid_controller src/pid_controller.cpp)
 add_executable(scan_invertor src/scan_invertor.cpp)
+add_executable(pid_controller src/pid_controller.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -173,8 +173,8 @@ target_link_libraries(footprint_publisher ${catkin_LIBRARIES})
 target_link_libraries(map_cloud_downsampler ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 target_link_libraries(initialpose_publisher ${catkin_LIBRARIES})
 target_link_libraries(initialpose_adjuster ${catkin_LIBRARIES} ${PCL_LIBRARIES})
-target_link_libraries(pid_controller ${catkin_LIBRARIES})
 target_link_libraries(scan_invertor ${catkin_LIBRARIES})
+target_link_libraries(pid_controller ${catkin_LIBRARIES})
 
 #############
 ## Install ##

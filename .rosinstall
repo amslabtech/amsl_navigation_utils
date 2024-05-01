@@ -1,0 +1,11 @@
+# amsl repositories
+- git:
+    local-name: amsl_navigation_managers
+    uri: https://github.com/amslabtech/amsl_navigation_managers.git
+    version: master
+
+# other repositories
+- git:
+    local-name: ndt_omp
+    uri: https://github.com/koide3/ndt_omp.git
+    version: master

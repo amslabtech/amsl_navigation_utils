@@ -1,4 +1,4 @@
-// Copyright 2023 amsl
+// Copyright 2024 amsl
 
 #include "amsl_navigation_msgs/NodeEdgeMap.h"
 #include <geometry_msgs/Point.h>

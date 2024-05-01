@@ -1,4 +1,4 @@
-// Copyright 2023 amsl
+// Copyright 2024 amsl
 
 #include <ros/ros.h>
 #include <sensor_msgs/LaserScan.h>

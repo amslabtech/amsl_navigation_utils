@@ -37,9 +37,9 @@ This node publishes robot footprint.
 
 ### map_cloud_downsampler
 #### Published Topics
-- /map_cloud/downsampled (`sensor_msgs/PointCloud2`)
+- ~\<name>/map_cloud/downsampled (`sensor_msgs/PointCloud2`)
 #### Subscribed Topics
-- /map_cloud (`sensor_msgs/PointCloud2`)
+- ~\<name>/map_cloud (`sensor_msgs/PointCloud2`)
 
 ### odom_broadcaster
 This node broadcasts odom transform for playing bag.

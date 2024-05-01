@@ -66,9 +66,9 @@ target_link_libraries(scan_invertor ${catkin_LIBRARIES})
 #############
 ## Testing ##
 #############
-# if(CATKIN_ENABLE_TESTING)
-#     find_package(rostest REQUIRED)
-#     find_package(roslint REQUIRED)
-#     roslint_cpp()
-#     roslint_add_test()
-# endif()
+if(CATKIN_ENABLE_TESTING)
+    find_package(rostest REQUIRED)
+    find_package(roslint REQUIRED)
+    roslint_cpp()
+    roslint_add_test()
+endif()

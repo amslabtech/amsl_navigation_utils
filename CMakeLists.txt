@@ -41,6 +41,7 @@ add_executable(footprint_publisher src/footprint_publisher.cpp)
 target_link_libraries(footprint_publisher ${catkin_LIBRARIES})
 
 add_executable(initialpose_publisher src/initialpose_publisher.cpp)
+add_dependencies(initialpose_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(initialpose_publisher ${catkin_LIBRARIES})
 
 add_executable(initialpose_adjuster src/initialpose_adjuster.cpp)
@@ -54,7 +55,6 @@ add_executable(odom_broadcaster src/odom_broadcaster.cpp)
 target_link_libraries(odom_broadcaster ${catkin_LIBRARIES})
 
 add_executable(odom_to_pose src/odom_to_pose.cpp)
-add_dependencies(odom_to_pose ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(odom_to_pose ${catkin_LIBRARIES})
 
 add_executable(scan_invertor src/scan_invertor.cpp)

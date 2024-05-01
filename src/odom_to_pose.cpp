@@ -1,4 +1,20 @@
-#include "amsl_navigation_utils/odom_to_pose.h"
+#include <nav_msgs/Odometry.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <ros/ros.h>
+
+class OdomToPose
+{
+public:
+    OdomToPose(void);
+    void process(void);
+
+private:
+    void odom_callback(const nav_msgs::OdometryConstPtr& msg);
+
+    ros::NodeHandle nh_;
+    ros::Publisher pose_pub_;
+    ros::Subscriber odom_sub_;
+};
 
 OdomToPose::OdomToPose(void)
 {

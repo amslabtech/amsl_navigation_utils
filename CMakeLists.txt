@@ -18,7 +18,7 @@ find_package(PCL 1.8.0 REQUIRED)
 ## catkin specific configuration ##
 ###################################
 catkin_package(
- INCLUDE_DIRS include
+#  INCLUDE_DIRS include
 #  LIBRARIES amsl_navigation_utils
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib

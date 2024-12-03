@@ -60,6 +60,9 @@ target_link_libraries(odom_to_pose ${catkin_LIBRARIES})
 add_executable(scan_invertor src/scan_invertor.cpp)
 target_link_libraries(scan_invertor ${catkin_LIBRARIES})
 
+add_executable(scan_filter src/scan_filter.cpp)
+target_link_libraries(scan_filter ${catkin_LIBRARIES})
+
 # add_executable(pid_controller src/pid_controller.cpp)
 # target_link_libraries(pid_controller ${catkin_LIBRARIES})
 
